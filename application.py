@@ -210,7 +210,10 @@ def comment(id):
 
     log_response("/api/comments/<id>", rsp.status, rsp.data, "")
     return rsp
-
+@application.route("/succes")
+def index():
+    rsp = Response("welcome", status=200, content_type="text/plain")
+    return rsp
 # run the app.
 if __name__ == "__main__":
     # Setting debug to True enables debug output. This line should be
