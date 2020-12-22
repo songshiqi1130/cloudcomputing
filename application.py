@@ -215,5 +215,5 @@ def comment(id):
 if __name__ == "__main__":
     # Setting debug to True enables debug output. This line should be
     # removed before deploying a production app.
-    application.run()
+    application.run("0.0.0.0", port=5000)
     #application.run("10.1.188.234", port=5001)
