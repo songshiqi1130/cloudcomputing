@@ -186,21 +186,42 @@ def content():
     log_response("/api/comments/comment", rsp.status, rsp.data, "")
     return rsp
 
-@application.route("/api/comment/<id>", methods=["GET"])
-def comment(id):
-    req_info = log_and_extract_input("/api/comment", id)
-    print("wrgwergwerhgewrh", id)
+# @application.route("/api/comments/comment", methods=["GET"])
+# def comment():
+#     req_info = log_and_extract_input("/api/comments/comment")
+#     print("rfqwefqwf", req_info["path_params"])
+#     try:
+#         if req_info["method"] == "GET":
+#             res = __comment_service.get_by_date_time()
+#             if res is not None:
+#                 rsp = Response(json.dumps(res), status=200, content_type="application/json")
+#             else:
+#                 rsp = Response("NOT FOUND", status=404, content_type="text/plain")
+#         else:
+#             rsp = Response("NOT IMPLEMENTED", status=501, content_type="text/plain")
+#     except Exception as e:
+#         """
+#         Non-specific, broad except clauses are a bad practice/design.
+#         """
+#         rsp = Response("I'm a teapot", status=418, content_type="text/plain")
+#         logger.error("comment: Exception=" + e)
+#
+#     log_response("/api/comments/comment", rsp.status, rsp.data, "")
+#     return rsp
 
+@application.route("/api/comments", methods=["GET"])
+def comment():
+    req_info = log_and_extract_input("/api/comments")
+    query_params = req_info["query_params"]
     try:
-        if req_info["method"] == "GET":
-            res = __comment_service.get_by_comment_id(id)
-
-            if res is not None:
-                rsp = Response(json.dumps(res), status=200, content_type="application/json")
-            else:
-                rsp = Response("NOT FOUND", status=404, content_type="text/plain")
+        if query_params and query_params["uid"]:
+            res = __comment_service.get_by_uid(query_params["uid"])
         else:
-            rsp = Response("NOT IMPLEMENTED", status=501, content_type="text/plain")
+            res = __comment_service.get_by_date_time()
+        if res is not None:
+             rsp = Response(json.dumps(res), status=200, content_type="application/json")
+        else:
+            rsp = Response("NOT FOUND", status=404, content_type="text/plain")
     except Exception as e:
         """
         Non-specific, broad except clauses are a bad practice/design.
@@ -208,15 +229,11 @@ def comment(id):
         rsp = Response("I'm a teapot", status=418, content_type="text/plain")
         logger.error("comment: Exception=" + e)
 
-    log_response("/api/comments/<id>", rsp.status, rsp.data, "")
-    return rsp
-@application.route("/succes")
-def index():
-    rsp = Response("welcome", status=200, content_type="text/plain")
+    log_response("/api/comments", rsp.status, rsp.data, "")
     return rsp
 # run the app.
 if __name__ == "__main__":
     # Setting debug to True enables debug output. This line should be
     # removed before deploying a production app.
-    application.run("0.0.0.0", port=5000)
-    #application.run("10.1.188.234", port=5001)
+    #application.run("0.0.0.0", port=5000)
+    application.run("127.0.0.1", port=5001)

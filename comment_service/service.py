@@ -25,9 +25,8 @@ class CommentService:
         self._table_name = CommentService.__table_name
         self._data_table = DynamoDBDataTable(self._table_name, key_columns="comment_id")
 
-    def get_by_comment_id(self, comment_id):
-
-        result = self._data_table.find_by_primary_key(comment_id)
+    def get_by_uid(self, uid):
+        result = self._data_table.find_by_uid(uid)
         return result
 
     def add_comment(self, cid, uid, comment_text):
@@ -37,3 +36,8 @@ class CommentService:
     def add_content(self, uid, comment_text):
         result = self._data_table.add_content(uid, comment_text, email=None)
         return result
+
+    def get_by_date_time(self):
+        result = self._data_table.find_by_date_time()
+        return result
+

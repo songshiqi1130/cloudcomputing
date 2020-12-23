@@ -34,26 +34,35 @@ class DynamoDBDataTable(BaseDataTable):
 
         self._dynamo_table = self._dynamodb.Table(table_name)
 
+    def find_by_primary_key(self):
+        return
 
-    def find_by_primary_key(self, key_fields, field_list=None, context=None):
+    def find_by_uid(self, uid):
         """
-
         :param key_fields: The values for the key_columns, in order, to use to find a record. For example,
             for Appearances this could be ['willite01', 'BOS', '1960']
         :param field_list: A subset of the fields of the record to return. The CSV file or RDB table may have many
             additional columns, but the caller only requests this subset.
         :return: None, or a dictionary containing the columns/values for the row.
         """
-
-        kf = {
-            self._key_columns : key_fields
-        }
-
         response = self._dynamo_table.scan(
-            FilterExpression=Attr('comment_text').eq("test")
+            FilterExpression=Attr('uid').eq(uid)
         )
+        return response['Items']
 
-        #response = response.get('Item', None)
+    def find_by_date_time(self):
+        """
+        :param key_fields: The values for the key_columns, in order, to use to find a record. For example,
+            for Appearances this could be ['willite01', 'BOS', '1960']
+        :param field_list: A subset of the fields of the record to return. The CSV file or RDB table may have many
+            additional columns, but the caller only requests this subset.
+        :return: None, or a dictionary containing the columns/values for the row.
+        """
+        dt = time.time()
+        date_time = time.strftime('%Y-%m-%d %H:%M:%S', time.gmtime(dt)),
+        response = self._dynamo_table.scan(
+            FilterExpression=Attr('date_time').begins_with('2')
+        )
         return response['Items']
 
     def find_by_template(self, template, field_list=None, limit=None, offset=None, order_by=None, context=None):
